@@ -1,0 +1,2565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>角度あて幾何トレーニング (Angle Master)</title>
+  <meta name="description" content="目分量で角度を当てる・作る！高校入試の幾何対策・直感養成Webゲーム" />
+  <meta property="og:title" content="角度あて幾何トレーニング (Angle Master)" />
+  <meta property="og:description" content="目分量で角度を当てる・作る！高校入試の幾何対策・直感養成Webゲーム" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    /* CSS Variables & Design Constitution */
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --green-500: #22c55e;
+      --green-600: #16a34a;
+      --green-50: #f0fdf4;
+      --red-500: #ef4444;
+      --red-600: #dc2626;
+      --red-50: #fef2f2;
+      --amber-500: #f59e0b;
+      --amber-50: #fffbeb;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background: linear-gradient(180deg, var(--slate-100) 0%, #e2e8f0 100%);
+      color: var(--slate-800);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--slate-200);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    /* Header */
+    header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--primary-light);
+      border: 1.5px solid var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .brand-text p {
+      font-size: 0.7rem;
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+
+    .exam-tag {
+      font-size: 0.62rem;
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-300);
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--slate-700);
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon:hover {
+      background: var(--slate-100);
+      border-color: var(--slate-400);
+      color: var(--slate-900);
+    }
+
+    .btn-icon:active {
+      transform: scale(0.96);
+    }
+
+    /* 5-Mode Navigation Tabs */
+    .mode-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      background: var(--slate-100);
+      padding: 5px;
+      gap: 3px;
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .mode-tab {
+      padding: 7px 2px;
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--slate-600);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+    }
+
+    .mode-tab.active {
+      background: #ffffff;
+      color: var(--primary);
+      border-color: var(--slate-300);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Mini Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--slate-50);
+      border-bottom: 1px solid var(--slate-200);
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-right: 1px solid var(--slate-200);
+    }
+
+    .stat-item:last-child {
+      border-right: none;
+    }
+
+    .stat-label {
+      font-size: 0.64rem;
+      color: var(--slate-500);
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .stat-value {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--slate-800);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .streak-fire {
+      color: #ea580c;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Question Banner */
+    .question-banner {
+      width: 100%;
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--slate-700);
+      background: var(--slate-100);
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--slate-200);
+      min-height: 42px;
+    }
+
+    .question-target-badge {
+      background: var(--primary);
+      color: #ffffff;
+      padding: 2px 10px;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    /* Canvas Card (Single Canvas modes) */
+    .canvas-card {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #ffffff;
+      border: 2px solid var(--slate-200);
+      border-radius: var(--radius);
+      box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.03);
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      touch-action: none;
+      background: #ffffff;
+    }
+
+    .canvas-overlay-guide {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--slate-500);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(4px);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--slate-200);
+      pointer-events: none;
+    }
+
+    .canvas-badges-right {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+
+    .canvas-badge-pill {
+      font-size: 0.64rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+
+    .badge-asym {
+      color: #7c3aed;
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+    }
+
+    .badge-noarc {
+      color: #0284c7;
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+    }
+
+    /* Figure 3-Choice Container (図形3択モード用) */
+    .figures-grid-container {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .figures-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+
+    .figure-choice-card {
+      background: #ffffff;
+      border: 2px solid var(--slate-300);
+      border-radius: 10px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .figure-choice-card:hover:not(.disabled) {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .figure-choice-card.selected {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .figure-choice-card.correct {
+      border-color: var(--green-500) !important;
+      background: var(--green-50) !important;
+      animation: pulseGreen 0.4s ease;
+    }
+
+    .figure-choice-card.wrong {
+      border-color: var(--red-500) !important;
+      background: var(--red-50) !important;
+      opacity: 0.85;
+    }
+
+    .figure-choice-card.disabled {
+      cursor: default;
+    }
+
+    .figure-choice-canvas {
+      width: 100%;
+      height: 120px;
+      border-radius: 6px;
+      background: #ffffff;
+      border: 1px solid var(--slate-100);
+    }
+
+    .figure-choice-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--slate-700);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .figure-key-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: var(--slate-100);
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--slate-500);
+    }
+
+    /* Result Feedback Banner */
+    .feedback-banner {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .feedback-banner.show {
+      display: flex;
+    }
+
+    .feedback-banner.success {
+      background: var(--green-50);
+      border: 1.5px solid var(--green-500);
+      color: var(--green-600);
+    }
+
+    .feedback-banner.fail {
+      background: var(--red-50);
+      border: 1.5px solid var(--red-500);
+      color: var(--red-600);
+    }
+
+    .feedback-banner.perfect {
+      background: #fefce8;
+      border: 1.5px solid #eab308;
+      color: #a16207;
+    }
+
+    .feedback-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feedback-detail {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+
+    .feedback-legend {
+      display: flex;
+      gap: 14px;
+      font-size: 0.72rem;
+      margin-top: 4px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-line-black {
+      width: 14px;
+      height: 3px;
+      background: var(--slate-800);
+    }
+
+    .legend-line-red {
+      width: 14px;
+      height: 0;
+      border-top: 2px dashed var(--red-500);
+    }
+
+    /* Control Panel */
+    .control-panel {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Drag-only Mode Info Box */
+    .drag-mode-info {
+      display: none;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Guess Controls */
+    .guess-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .angle-value-display {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .current-angle-number {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .current-angle-unit {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--slate-400);
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .btn-step {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      background: var(--slate-100);
+      border: 1.5px solid var(--slate-300);
+      border-radius: 8px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--slate-800);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn-step:hover:not(:disabled) {
+      background: var(--slate-200);
+      border-color: var(--slate-400);
+    }
+
+    .btn-step:active:not(:disabled) {
+      transform: scale(0.94);
+    }
+
+    .btn-step:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .angle-slider {
+      flex: 1;
+      height: 10px;
+      border-radius: 5px;
+      background: var(--slate-200);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .angle-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .angle-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .angle-slider::-webkit-slider-thumb:active {
+      transform: scale(1.25);
+    }
+
+    .quick-jumps {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-jump {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 9px;
+      background: var(--slate-100);
+      border: 1px solid var(--slate-300);
+      border-radius: 6px;
+      color: var(--slate-700);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-jump:hover:not(:disabled) {
+      background: var(--slate-200);
+      color: var(--slate-900);
+    }
+
+    /* 3-Choice Number Buttons */
+    .number-choices-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .btn-choice {
+      padding: 16px 8px;
+      border-radius: 10px;
+      border: 2px solid var(--slate-300);
+      background: #ffffff;
+      color: var(--slate-800);
+      font-size: 1.35rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.18s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-choice .choice-key {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--slate-400);
+      background: var(--slate-100);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .btn-choice:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-choice.correct {
+      border-color: var(--green-500) !important;
+      background: var(--green-50) !important;
+      color: var(--green-600) !important;
+      animation: pulseGreen 0.4s ease;
+    }
+
+    .btn-choice.wrong {
+      border-color: var(--red-500) !important;
+      background: var(--red-50) !important;
+      color: var(--red-600) !important;
+      opacity: 0.8;
+    }
+
+    /* Primary Action Button */
+    .btn-primary-action {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      border: none;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 1.02rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-primary-action:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary-action:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary-action.btn-next {
+      background: var(--green-600);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+
+    .btn-primary-action.btn-next:hover {
+      background: #15803d;
+      box-shadow: 0 6px 16px rgba(22, 163, 74, 0.4);
+    }
+
+    .kbd-badge {
+      font-size: 0.72rem;
+      background: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Hint Exam Container */
+    .hint-container {
+      width: 100%;
+      background: var(--slate-50);
+      border: 1.5px dashed var(--slate-300);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hint-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hint-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--slate-700);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-hint-reroll {
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      border-radius: 5px;
+      padding: 2px 8px;
+      color: var(--slate-700);
+      cursor: pointer;
+    }
+
+    .btn-hint-reroll:hover {
+      background: var(--slate-100);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 9999;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      background: #ffffff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: scaleUp 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+    }
+
+    .modal-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--slate-50);
+    }
+
+    .modal-header h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-body {
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .setting-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--slate-700);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .setting-sublabel {
+      font-size: 0.72rem;
+      color: var(--slate-500);
+    }
+
+    .setting-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .segmented-control {
+      display: flex;
+      background: var(--slate-100);
+      border: 1px solid var(--slate-200);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .segment-btn {
+      flex: 1;
+      padding: 7px 4px;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--slate-600);
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .segment-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .switch-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .switch-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--slate-800);
+    }
+
+    .switch-desc {
+      font-size: 0.72rem;
+      color: var(--slate-500);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-toggle {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--slate-300);
+      transition: 0.2s;
+      border-radius: 24px;
+    }
+
+    .slider-toggle:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.2s;
+      border-radius: 50%;
+      box-shadow: var(--shadow-sm);
+    }
+
+    input:checked + .slider-toggle {
+      background-color: var(--primary);
+    }
+
+    input:checked + .slider-toggle:before {
+      transform: translateX(20px);
+    }
+
+    .modal-footer {
+      padding: 12px 18px;
+      border-top: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-reset-stats {
+      background: transparent;
+      border: none;
+      color: var(--red-600);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-reset-stats:hover {
+      background: var(--red-50);
+    }
+
+    .btn-close-modal {
+      padding: 8px 16px;
+      background: var(--slate-800);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-close-modal:hover {
+      background: var(--slate-900);
+    }
+
+    .footer-help {
+      font-size: 0.72rem;
+      color: var(--slate-500);
+      text-align: center;
+      padding: 6px;
+      line-height: 1.5;
+    }
+
+    .footer-help kbd {
+      background: var(--slate-200);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 0.68rem;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes popIn { 0% { transform: scale(0.92); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes pulseGreen { 0% { transform: scale(1); } 50% { transform: scale(1.04); } 100% { transform: scale(1); } }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="brand-title">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 21H3L12 3l9 18z" />
+            <path d="M12 9v4" />
+            <path d="M12 17h.01" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>角度あてマスター <span class="exam-tag">高校入試・幾何</span></h1>
+          <p>目分量と幾何感覚を1度刻みで鍛える</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-icon" id="btnOpenSettings" title="設定を開く" aria-label="設定">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- 5大プレイモード切り替えタブ -->
+    <nav class="mode-nav">
+      <button class="mode-tab active" data-gamemode="guess">📐 推測</button>
+      <button class="mode-tab" data-gamemode="drag">✏️ 作成</button>
+      <button class="mode-tab" data-gamemode="choice3">🎯 角度3択</button>
+      <button class="mode-tab" data-gamemode="figchoice">🖼️ 図形3択</button>
+      <button class="mode-tab" data-gamemode="nstep" id="tabNStep">🔢 5°3択</button>
+    </nav>
+
+    <!-- ミニ戦績バー -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">連続正解</span>
+        <span class="stat-value"><span class="streak-fire">🔥</span><span id="statStreak">0</span></span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">最高記録</span>
+        <span class="stat-value">🏆 <span id="statBestStreak">0</span></span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">正答率</span>
+        <span class="stat-value" id="statAccuracy">0%</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">合格基準</span>
+        <span class="stat-value" id="statTolerance">±2°</span>
+      </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+      <!-- 出題バナー -->
+      <div class="question-banner" id="questionBanner">
+        <span id="questionText">角度を目分量で推測してください</span>
+      </div>
+
+      <!-- 単一メインキャンバス（推測・作成・角度3択・n度刻み3択） -->
+      <div class="canvas-card" id="singleCanvasCard">
+        <canvas id="mainCanvas" width="360" height="300"></canvas>
+        <div class="canvas-overlay-guide" id="canvasGuide">ランダム回転表示中</div>
+        <div class="canvas-badges-right">
+          <div class="canvas-badge-pill badge-asym" id="asymBadge" style="display: none;">長さ非対称</div>
+          <div class="canvas-badge-pill badge-noarc" id="noArcBadge" style="display: none;">扇形OFF</div>
+        </div>
+      </div>
+
+      <!-- 図形3択用グリッド（角度の数字から図形を選択するモード） -->
+      <div class="figures-grid-container" id="figuresGridContainer">
+        <div class="figures-grid">
+          <div class="figure-choice-card" id="figCard0" data-index="0">
+            <canvas class="figure-choice-canvas" id="figCanvas0" width="110" height="110"></canvas>
+            <div class="figure-choice-label">
+              <span class="figure-key-badge">[1]</span>
+              <span class="fig-text" id="figText0">選択</span>
+            </div>
+          </div>
+          <div class="figure-choice-card" id="figCard1" data-index="1">
+            <canvas class="figure-choice-canvas" id="figCanvas1" width="110" height="110"></canvas>
+            <div class="figure-choice-label">
+              <span class="figure-key-badge">[2]</span>
+              <span class="fig-text" id="figText1">選択</span>
+            </div>
+          </div>
+          <div class="figure-choice-card" id="figCard2" data-index="2">
+            <canvas class="figure-choice-canvas" id="figCanvas2" width="110" height="110"></canvas>
+            <div class="figure-choice-label">
+              <span class="figure-key-badge">[3]</span>
+              <span class="fig-text" id="figText2">選択</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 判定結果フィードバック -->
+      <div class="feedback-banner" id="feedbackBanner">
+        <div class="feedback-title" id="feedbackTitle">正解！</div>
+        <div class="feedback-detail" id="feedbackDetail">正解: 45° ｜ 推測: 46° (誤差: +1°)</div>
+        <div class="feedback-legend" id="feedbackLegend">
+          <div class="legend-item"><span class="legend-line-black"></span> 正解の角</div>
+          <div class="legend-item"><span class="legend-line-red"></span> あなたの角度</div>
+        </div>
+      </div>
+
+      <!-- 操作パネル -->
+      <div class="control-panel">
+        
+        <!-- ドラッグ作成モード専用案内（※回答前は数字やスライダーを完全非表示に！） -->
+        <div class="drag-mode-info" id="dragModeInfo">
+          💡 青い丸ハンドルを指やマウスでドラッグして、目分量で角度を作ってください（数値は確定まで秘密です）
+        </div>
+
+        <!-- 推測モード用スライダーコントロール -->
+        <div class="guess-controls" id="guessControls">
+          <div class="angle-value-display">
+            <span class="current-angle-number" id="angleDisplay">45</span>
+            <span class="current-angle-unit">°</span>
+          </div>
+
+          <div class="slider-row">
+            <button class="btn-step" id="btnMinus" title="1度減らす (-1°)">−</button>
+            <input type="range" id="angleSlider" class="angle-slider" min="1" max="179" value="45" step="1" />
+            <button class="btn-step" id="btnPlus" title="1度増やす (+1°)">＋</button>
+          </div>
+
+          <div class="quick-jumps">
+            <button class="btn-jump" data-delta="-5">-5°</button>
+            <button class="btn-jump" data-set="30">30°</button>
+            <button class="btn-jump" data-set="45">45°</button>
+            <button class="btn-jump" data-set="60">60°</button>
+            <button class="btn-jump" data-set="90">90° (直角)</button>
+            <button class="btn-jump" data-set="120">120°</button>
+            <button class="btn-jump" data-delta="+5">+5°</button>
+          </div>
+        </div>
+
+        <!-- 角度3択・n度刻み3択用の数字選択肢ボタン -->
+        <div id="numberChoiceControls" style="display: none;">
+          <div class="number-choices-grid">
+            <button class="btn-choice" id="choiceBtn0" data-index="0">
+              <span class="choice-angle">45°</span>
+              <span class="choice-key">[1]</span>
+            </button>
+            <button class="btn-choice" id="choiceBtn1" data-index="1">
+              <span class="choice-angle">60°</span>
+              <span class="choice-key">[2]</span>
+            </button>
+            <button class="btn-choice" id="choiceBtn2" data-index="2">
+              <span class="choice-angle">75°</span>
+              <span class="choice-key">[3]</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- メイン確定・次へボタン -->
+        <button class="btn-primary-action" id="btnAction">
+          <span id="btnActionText">回答を確定する</span>
+          <span class="kbd-badge">Enter ↵</span>
+        </button>
+
+      </div>
+
+      <!-- 入試条件見本ヒントキャンバス -->
+      <div class="hint-container" id="hintContainer" style="display: none;">
+        <div class="hint-header">
+          <div class="hint-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            入試条件見本 (<span id="hintAngleLabel">∠PQR = 45°</span>)
+          </div>
+          <button class="btn-hint-reroll" id="btnRerollHint" title="別の見本角を生成">🎲 別の見本</button>
+        </div>
+        <canvas id="hintCanvas" width="320" height="130"></canvas>
+      </div>
+
+    </div>
+
+    <!-- キーボード操作ガイド -->
+    <div class="footer-help">
+      キーボード操作: <kbd>Enter</kbd> 確定 / 次へ ｜ <kbd>←</kbd> <kbd>→</kbd> 1°微調整 ｜ <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> 選択肢選択
+    </div>
+  </div>
+
+  <!-- 設定モーダル（歯車ボタン） -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          ゲーム設定
+        </h2>
+        <button class="btn-icon" id="btnCloseModal" aria-label="閉じる">✕</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- 扇形・円弧の表示/非表示（ご要望機能） -->
+        <div class="switch-row">
+          <div class="switch-info">
+            <span class="switch-title">扇形・円弧（アーク）の表示</span>
+            <span class="switch-desc">OFFにすると角を表す扇形・円弧が消え、2直線のみの交差になります</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="checkShowArc" checked />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <!-- 出題範囲 -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>出題角度の範囲</span>
+            <span class="setting-badge" id="rangeBadge">無差別 (1°〜179°)</span>
+          </div>
+          <div class="segmented-control" id="rangeSegmented">
+            <button class="segment-btn" data-range="acute">鋭角 (1°〜89°)</button>
+            <button class="segment-btn" data-range="obtuse">鈍角 (91°〜179°)</button>
+            <button class="segment-btn active" data-range="all">無差別 (1°〜179°)</button>
+          </div>
+        </div>
+
+        <!-- 許容誤差範囲 -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>合格の許容誤差 (±度)</span>
+            <span class="setting-badge" id="toleranceBadge">±2° 以内</span>
+          </div>
+          <div class="slider-row">
+            <span style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">±1°</span>
+            <input type="range" id="toleranceSlider" class="angle-slider" min="1" max="10" value="2" step="1" />
+            <span style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">±10°</span>
+          </div>
+          <span class="setting-sublabel">※±2°は高校入試・上級レベル。初級は±5°等でも楽しめます</span>
+        </div>
+
+        <!-- 線の長さ非対称モード -->
+        <div class="switch-row">
+          <div class="switch-info">
+            <span class="switch-title">線の長さ非対称モード</span>
+            <span class="switch-desc">2本の直線の長さをランダムに変え、錯覚を克服する訓練</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="checkAsymArms" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <!-- n度刻み3択の刻み幅 -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>n度刻み3択の刻み幅 (n)</span>
+            <span class="setting-badge" id="nStepBadge">5° 刻み</span>
+          </div>
+          <div class="slider-row">
+            <span style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">1°</span>
+            <input type="range" id="nStepSlider" class="angle-slider" min="1" max="30" value="5" step="1" />
+            <span style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">30°</span>
+          </div>
+          <span class="setting-sublabel">例: 5°刻み、10°刻み、15°刻みなど自由に設定可能</span>
+        </div>
+
+        <!-- 線の太さ調整 -->
+        <div class="setting-group">
+          <div class="setting-label">
+            <span>描画線の太さ</span>
+            <span class="setting-badge" id="lineWidthBadge">3 px</span>
+          </div>
+          <div class="slider-row">
+            <span style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">1px</span>
+            <input type="range" id="lineWidthSlider" class="angle-slider" min="1" max="8" value="3" step="1" />
+            <span style="font-size:0.75rem; color:var(--slate-500); font-weight:700;">8px</span>
+          </div>
+        </div>
+
+        <!-- 高校入試風ヒント見本 -->
+        <div class="switch-row">
+          <div class="switch-info">
+            <span class="switch-title">高校入試風ヒント見本</span>
+            <span class="switch-desc">水平底辺の「∠PQR = ○○°」見本キャンバスを表示</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="checkHint" />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <!-- ヒントの角度範囲 -->
+        <div class="setting-group" id="hintRangeGroup" style="display: none;">
+          <div class="setting-label">
+            <span>ヒント見本の角度範囲</span>
+          </div>
+          <div class="segmented-control" id="hintRangeSegmented">
+            <button class="segment-btn active" data-hintrange="acute">鋭角</button>
+            <button class="segment-btn" data-hintrange="obtuse">鈍角</button>
+            <button class="segment-btn" data-hintrange="all">無差別</button>
+          </div>
+        </div>
+
+        <!-- 効果音 -->
+        <div class="switch-row">
+          <div class="switch-info">
+            <span class="switch-title">効果音 (SE)</span>
+            <span class="switch-desc">Web Audio合成による心地よい正解・パーフェクト音</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="checkSound" checked />
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-reset-stats" id="btnResetStats">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+          戦績をリセット
+        </button>
+        <button class="btn-close-modal" id="btnFooterClose">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript ロジック (外部ライブラリ不使用・単一ファイル完結) -->
+  <script>
+    (function () {
+      'use strict';
+
+      const STORAGE_STATS_KEY = 'angle_game_stats_v2';
+      const STORAGE_SETTINGS_KEY = 'angle_game_settings_v2';
+
+      // 設定初期値
+      const settings = {
+        angleRange: 'all',      // 'acute' | 'obtuse' | 'all'
+        gameMode: 'guess',       // 'guess' | 'drag' | 'choice3' | 'figchoice' | 'nstep'
+        tolerance: 2,           // 1 to 10
+        asymmetricArms: false,  // true / false
+        showArc: true,          // true: 扇形・円弧を表示, false: 直線のみ
+        nStep: 5,               // 1 to 30
+        lineWidth: 3,           // 1 to 8
+        showHint: false,        // true / false
+        hintRange: 'acute',     // 'acute' | 'obtuse' | 'all'
+        soundEnabled: true
+      };
+
+      // 戦績データ
+      const stats = {
+        streak: 0,
+        bestStreak: 0,
+        totalPlayed: 0,
+        correctCount: 0
+      };
+
+      // 現在の問題データ
+      const problem = {
+        targetAngle: 45,
+        baseRotation: 0,
+        arm1Len: 125,
+        arm2Len: 125,
+        userAngle: 45,
+        isAnswered: false,
+        isCorrect: false,
+        diff: 0,
+        choices: [30, 45, 60],          // 角度3択用の選択肢
+        figOptions: [],                 // 図形3択用のデータ [{angle, baseRotation, arm1Len, arm2Len}, ...]
+        selectedChoice: null,
+        isDraggingArm: false
+      };
+
+      const hintState = {
+        angle: 45
+      };
+
+      // localStorageからロード
+      try {
+        const savedSettings = localStorage.getItem(STORAGE_SETTINGS_KEY);
+        if (savedSettings) Object.assign(settings, JSON.parse(savedSettings));
+        const savedStats = localStorage.getItem(STORAGE_STATS_KEY);
+        if (savedStats) Object.assign(stats, JSON.parse(savedStats));
+      } catch (e) {
+        console.warn('LocalStorage not accessible:', e);
+      }
+
+      function saveSettings() {
+        try { localStorage.setItem(STORAGE_SETTINGS_KEY, JSON.stringify(settings)); } catch (e) {}
+      }
+
+      function saveStats() {
+        try { localStorage.setItem(STORAGE_STATS_KEY, JSON.stringify(stats)); } catch (e) {}
+      }
+
+      // Web Audio API によるシンセ効果音 (完全オフライン・外部依存なし)
+      let audioCtx = null;
+      function getAudioContext() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) audioCtx = new AudioContextClass();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      }
+
+      function playSound(type) {
+        if (!settings.soundEnabled) return;
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        const now = ctx.currentTime;
+        const gainNode = ctx.createGain();
+        gainNode.connect(ctx.destination);
+
+        if (type === 'perfect') {
+          // ファンファーレ和音
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const noteGain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            noteGain.gain.setValueAtTime(0, now + idx * 0.08);
+            noteGain.gain.linearRampToValueAtTime(0.18, now + idx * 0.08 + 0.02);
+            noteGain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.35);
+            osc.connect(noteGain);
+            noteGain.connect(ctx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.36);
+          });
+        } else if (type === 'success') {
+          // ピロリン正解音
+          const notes = [587.33, 880.00];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const noteGain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+            noteGain.gain.setValueAtTime(0, now + idx * 0.1);
+            noteGain.gain.linearRampToValueAtTime(0.2, now + idx * 0.1 + 0.02);
+            noteGain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.3);
+            osc.connect(noteGain);
+            noteGain.connect(ctx.destination);
+            osc.start(now + idx * 0.1);
+            osc.stop(now + idx * 0.1 + 0.32);
+          });
+        } else if (type === 'fail') {
+          // 不正解低音
+          const osc = ctx.createOscillator();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(170, now + 0.25);
+          gainNode.gain.setValueAtTime(0.12, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.connect(gainNode);
+          osc.start(now);
+          osc.stop(now + 0.29);
+        } else if (type === 'click') {
+          // ポチッ微調整音
+          const osc = ctx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(900, now);
+          gainNode.gain.setValueAtTime(0.05, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          osc.connect(gainNode);
+          osc.start(now);
+          osc.stop(now + 0.05);
+        }
+      }
+
+      // DOM参照
+      const mainCanvas = document.getElementById('mainCanvas');
+      const hintCanvas = document.getElementById('hintCanvas');
+      const singleCanvasCard = document.getElementById('singleCanvasCard');
+      const figuresGridContainer = document.getElementById('figuresGridContainer');
+      const angleSlider = document.getElementById('angleSlider');
+      const angleDisplay = document.getElementById('angleDisplay');
+      const btnMinus = document.getElementById('btnMinus');
+      const btnPlus = document.getElementById('btnPlus');
+      const btnAction = document.getElementById('btnAction');
+      const btnActionText = document.getElementById('btnActionText');
+      const questionText = document.getElementById('questionText');
+      const feedbackBanner = document.getElementById('feedbackBanner');
+      const feedbackTitle = document.getElementById('feedbackTitle');
+      const feedbackDetail = document.getElementById('feedbackDetail');
+      const feedbackLegend = document.getElementById('feedbackLegend');
+      const guessControls = document.getElementById('guessControls');
+      const dragModeInfo = document.getElementById('dragModeInfo');
+      const numberChoiceControls = document.getElementById('numberChoiceControls');
+      const hintContainer = document.getElementById('hintContainer');
+      const hintAngleLabel = document.getElementById('hintAngleLabel');
+      const btnRerollHint = document.getElementById('btnRerollHint');
+      const canvasGuide = document.getElementById('canvasGuide');
+      const asymBadge = document.getElementById('asymBadge');
+      const noArcBadge = document.getElementById('noArcBadge');
+      const tabNStep = document.getElementById('tabNStep');
+
+      const statStreak = document.getElementById('statStreak');
+      const statBestStreak = document.getElementById('statBestStreak');
+      const statAccuracy = document.getElementById('statAccuracy');
+      const statTolerance = document.getElementById('statTolerance');
+
+      const settingsModal = document.getElementById('settingsModal');
+      const btnOpenSettings = document.getElementById('btnOpenSettings');
+      const btnCloseModal = document.getElementById('btnCloseModal');
+      const btnFooterClose = document.getElementById('btnFooterClose');
+      const btnResetStats = document.getElementById('btnResetStats');
+      const rangeSegmented = document.getElementById('rangeSegmented');
+      const rangeBadge = document.getElementById('rangeBadge');
+      const toleranceSlider = document.getElementById('toleranceSlider');
+      const toleranceBadge = document.getElementById('toleranceBadge');
+      const checkAsymArms = document.getElementById('checkAsymArms');
+      const checkShowArc = document.getElementById('checkShowArc');
+      const nStepSlider = document.getElementById('nStepSlider');
+      const nStepBadge = document.getElementById('nStepBadge');
+      const lineWidthSlider = document.getElementById('lineWidthSlider');
+      const lineWidthBadge = document.getElementById('lineWidthBadge');
+      const checkHint = document.getElementById('checkHint');
+      const hintRangeGroup = document.getElementById('hintRangeGroup');
+      const hintRangeSegmented = document.getElementById('hintRangeSegmented');
+      const checkSound = document.getElementById('checkSound');
+
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function getRangeBounds(rangeType) {
+        if (rangeType === 'acute') return { min: 1, max: 89 };
+        if (rangeType === 'obtuse') return { min: 91, max: 179 };
+        return { min: 1, max: 179 };
+      }
+
+      function updateRangeBoundsUI() {
+        const bounds = getRangeBounds(settings.angleRange);
+        angleSlider.min = bounds.min;
+        angleSlider.max = bounds.max;
+        if (problem.userAngle < bounds.min) problem.userAngle = bounds.min;
+        if (problem.userAngle > bounds.max) problem.userAngle = bounds.max;
+        angleSlider.value = problem.userAngle;
+        angleDisplay.textContent = problem.userAngle;
+
+        const badgeLabels = {
+          acute: '鋭角 (1°〜89°)',
+          obtuse: '鈍角 (91°〜179°)',
+          all: '無差別 (1°〜179°)'
+        };
+        rangeBadge.textContent = badgeLabels[settings.angleRange] || '';
+      }
+
+      function updateStatsUI() {
+        statStreak.textContent = stats.streak;
+        statBestStreak.textContent = stats.bestStreak;
+        const acc = stats.totalPlayed > 0 ? ((stats.correctCount / stats.totalPlayed) * 100).toFixed(1) : '0.0';
+        statAccuracy.textContent = acc + '%';
+        statTolerance.textContent = `±${settings.tolerance}°`;
+      }
+
+      // 出題生成
+      function generateNewProblem() {
+        const bounds = getRangeBounds(settings.angleRange);
+        let target = getRandomInt(bounds.min, bounds.max);
+
+        // n度刻み3択の場合、目標角もnの倍数に設定
+        if (settings.gameMode === 'nstep') {
+          const step = settings.nStep;
+          const minK = Math.ceil(bounds.min / step);
+          const maxK = Math.floor(bounds.max / step);
+          if (maxK >= minK) {
+            target = getRandomInt(minK, maxK) * step;
+          }
+        }
+
+        problem.targetAngle = target;
+        // 図形全体のランダム回転 (0°〜359°)
+        problem.baseRotation = Math.random() * 2 * Math.PI;
+
+        // 線の長さ（長さ非対称モード時はランダム比率）
+        if (settings.asymmetricArms) {
+          problem.arm1Len = getRandomInt(75, 145);
+          problem.arm2Len = getRandomInt(75, 145);
+        } else {
+          problem.arm1Len = 125;
+          problem.arm2Len = 125;
+        }
+
+        // 初期推測角度
+        // 作成モードでは目標角とずれたランダムな初期角度にする（数値は見せない）
+        if (settings.gameMode === 'drag') {
+          const randOffset = (Math.random() < 0.5 ? 1 : -1) * getRandomInt(15, 35);
+          let initAngle = target + randOffset;
+          if (initAngle < bounds.min) initAngle = bounds.min + 10;
+          if (initAngle > bounds.max) initAngle = bounds.max - 10;
+          problem.userAngle = initAngle;
+        } else {
+          problem.userAngle = bounds.min + Math.round((bounds.max - bounds.min) / 2);
+        }
+
+        angleSlider.value = problem.userAngle;
+        angleDisplay.textContent = problem.userAngle;
+
+        problem.isAnswered = false;
+        problem.isCorrect = false;
+        problem.diff = 0;
+        problem.selectedChoice = null;
+        problem.isDraggingArm = false;
+
+        // 選択肢生成
+        if (settings.gameMode === 'choice3') {
+          generateChoice3Options(target, bounds);
+        } else if (settings.gameMode === 'nstep') {
+          generateNStepOptions(target, bounds, settings.nStep);
+        } else if (settings.gameMode === 'figchoice') {
+          generateFigChoiceOptions(target, bounds);
+        }
+
+        feedbackBanner.classList.remove('show', 'success', 'fail', 'perfect');
+        setupUIForMode();
+
+        if (settings.gameMode === 'figchoice') {
+          renderFigChoices();
+        } else {
+          renderMainCanvas();
+        }
+      }
+
+      function generateChoice3Options(target, bounds) {
+        const opts = new Set([target]);
+        let attempts = 0;
+        while (opts.size < 3 && attempts < 40) {
+          attempts++;
+          const offset = (Math.random() < 0.5 ? 1 : -1) * getRandomInt(7, 26);
+          let distractor = target + offset;
+          if (distractor < bounds.min) distractor = bounds.min + getRandomInt(2, 10);
+          if (distractor > bounds.max) distractor = bounds.max - getRandomInt(2, 10);
+          if (distractor !== target) opts.add(distractor);
+        }
+        problem.choices = Array.from(opts).sort(() => Math.random() - 0.5);
+      }
+
+      function generateNStepOptions(target, bounds, step) {
+        const choices = [target];
+        const below = target - step;
+        const above = target + step;
+
+        if (below >= bounds.min && above <= bounds.max) {
+          choices.push(below, above);
+        } else if (below < bounds.min) {
+          choices.push(target + step, target + step * 2);
+        } else {
+          choices.push(target - step * 2, target - step);
+        }
+        problem.choices = choices.sort(() => Math.random() - 0.5);
+      }
+
+      function generateFigChoiceOptions(target, bounds) {
+        const angles = [target];
+        let attempts = 0;
+        while (angles.length < 3 && attempts < 40) {
+          attempts++;
+          const offset = (Math.random() < 0.5 ? 1 : -1) * getRandomInt(12, 32);
+          let distractor = target + offset;
+          if (distractor < bounds.min) distractor = bounds.min + getRandomInt(3, 12);
+          if (distractor > bounds.max) distractor = bounds.max - getRandomInt(3, 12);
+          if (!angles.includes(distractor)) angles.push(distractor);
+        }
+
+        // Shuffle
+        angles.sort(() => Math.random() - 0.5);
+
+        // 各選択肢の図形描画パラメータ（それぞれランダムな回転角を付与）
+        problem.figOptions = angles.map(ang => ({
+          angle: ang,
+          baseRotation: Math.random() * 2 * Math.PI,
+          arm1Len: settings.asymmetricArms ? getRandomInt(28, 48) : 42,
+          arm2Len: settings.asymmetricArms ? getRandomInt(28, 48) : 42
+        }));
+      }
+
+      function setupUIForMode() {
+        const mode = settings.gameMode;
+        tabNStep.textContent = `🔢 ${settings.nStep}°3択`;
+
+        // キャンバスの切り替え（通常キャンバス vs 図形3択グリッド）
+        if (mode === 'figchoice') {
+          singleCanvasCard.style.display = 'none';
+          figuresGridContainer.style.display = 'flex';
+        } else {
+          singleCanvasCard.style.display = 'flex';
+          figuresGridContainer.style.display = 'none';
+        }
+
+        // モード別のコントロール表示制御
+        if (mode === 'drag') {
+          // 【要件対応】ドラッグ作成モード：下部の数値・スライダー・ジャンプボタンは完全非表示！
+          questionText.innerHTML = `【お題】 <span class="question-target-badge">${problem.targetAngle}°</span> の角を作れ！`;
+          dragModeInfo.style.display = problem.isAnswered ? 'none' : 'block';
+          guessControls.style.display = problem.isAnswered ? 'flex' : 'none'; // 確定後のみ結果確認用に表示
+          numberChoiceControls.style.display = 'none';
+          canvasGuide.textContent = '青丸ハンドルをドラッグして角を調整';
+          btnAction.style.display = 'flex';
+          if (!problem.isAnswered) {
+            btnAction.classList.remove('btn-next');
+            btnActionText.textContent = 'この角度で確定する';
+          }
+        } else if (mode === 'guess') {
+          questionText.innerHTML = '角度を目分量で推測してください';
+          dragModeInfo.style.display = 'none';
+          guessControls.style.display = 'flex';
+          numberChoiceControls.style.display = 'none';
+          canvasGuide.textContent = 'ランダム回転表示中';
+          btnAction.style.display = 'flex';
+          if (!problem.isAnswered) {
+            btnAction.classList.remove('btn-next');
+            btnActionText.textContent = '回答を確定する';
+          }
+        } else if (mode === 'figchoice') {
+          // 【要件対応】図形3択モード：問題に角度が提示され、3つの図形から選択
+          questionText.innerHTML = `【問題】 <span class="question-target-badge">${problem.targetAngle}°</span> の図形はどれ？`;
+          dragModeInfo.style.display = 'none';
+          guessControls.style.display = 'none';
+          numberChoiceControls.style.display = 'none';
+          btnAction.style.display = problem.isAnswered ? 'flex' : 'none';
+          btnAction.classList.add('btn-next');
+          btnActionText.textContent = '次の問題へ';
+        } else {
+          // 角度3択 or n度刻み3択
+          questionText.innerHTML = mode === 'choice3' ? '角の大きさとして最も近いものを選んでください' : `${settings.nStep}°刻みの選択肢から正しいものを選んでください`;
+          dragModeInfo.style.display = 'none';
+          guessControls.style.display = 'none';
+          numberChoiceControls.style.display = 'block';
+          canvasGuide.textContent = '選択肢をタップまたはキー [1][2][3]';
+          btnAction.style.display = problem.isAnswered ? 'flex' : 'none';
+          btnAction.classList.add('btn-next');
+          btnActionText.textContent = '次の問題へ';
+          renderChoiceButtons();
+        }
+
+        // バッジ
+        asymBadge.style.display = settings.asymmetricArms ? 'block' : 'none';
+        noArcBadge.style.display = settings.showArc ? 'none' : 'block';
+
+        btnMinus.disabled = false;
+        btnPlus.disabled = false;
+        angleSlider.disabled = false;
+        document.querySelectorAll('.btn-jump').forEach(b => b.disabled = false);
+      }
+
+      function renderChoiceButtons() {
+        for (let i = 0; i < 3; i++) {
+          const btn = document.getElementById(`choiceBtn${i}`);
+          const angle = problem.choices[i];
+          btn.querySelector('.choice-angle').textContent = `${angle}°`;
+          btn.className = 'btn-choice';
+          btn.disabled = problem.isAnswered;
+
+          if (problem.isAnswered) {
+            if (angle === problem.targetAngle) {
+              btn.classList.add('correct');
+            } else if (angle === problem.selectedChoice) {
+              btn.classList.add('wrong');
+            }
+          }
+        }
+      }
+
+      // 回答確定処理
+      function submitAnswer() {
+        if (problem.isAnswered) {
+          generateNewProblem();
+          return;
+        }
+
+        problem.isAnswered = true;
+        const guessed = problem.userAngle;
+        const target = problem.targetAngle;
+        const diff = guessed - target;
+        const absDiff = Math.abs(diff);
+        problem.diff = diff;
+
+        let isQualified = false;
+        if (settings.gameMode === 'figchoice' || settings.gameMode === 'choice3' || settings.gameMode === 'nstep') {
+          isQualified = (problem.selectedChoice === target);
+        } else {
+          isQualified = absDiff <= settings.tolerance;
+        }
+        problem.isCorrect = isQualified;
+
+        stats.totalPlayed++;
+        if (isQualified) {
+          stats.streak++;
+          if (stats.streak > stats.bestStreak) stats.bestStreak = stats.streak;
+          stats.correctCount++;
+        } else {
+          stats.streak = 0;
+        }
+        saveStats();
+        updateStatsUI();
+
+        if (settings.gameMode === 'figchoice') {
+          feedbackLegend.style.display = 'none';
+          if (isQualified) {
+            playSound('perfect');
+            feedbackBanner.className = 'feedback-banner show success';
+            feedbackTitle.innerHTML = '⭕ 正解！ 正しい図形を見抜きました！';
+            feedbackDetail.innerHTML = `正解: <strong>${target}°</strong> の図形`;
+          } else {
+            playSound('fail');
+            feedbackBanner.className = 'feedback-banner show fail';
+            feedbackTitle.innerHTML = '❌ 不正解！ 別の図形でした';
+            feedbackDetail.innerHTML = `目標: <strong>${target}°</strong> ｜ あなたが選択: <strong>${problem.selectedChoice}°</strong>`;
+          }
+          renderFigChoices();
+        } else {
+          feedbackLegend.style.display = 'flex';
+          if (absDiff === 0) {
+            playSound('perfect');
+            feedbackBanner.className = 'feedback-banner show perfect';
+            feedbackTitle.innerHTML = '🎯 ピッタリ賞！ 完璧です！';
+          } else if (isQualified) {
+            playSound('success');
+            feedbackBanner.className = 'feedback-banner show success';
+            feedbackTitle.innerHTML = '⭕ 合格！ 素晴らしい目分量！';
+          } else {
+            playSound('fail');
+            feedbackBanner.className = 'feedback-banner show fail';
+            feedbackTitle.innerHTML = '❌ 不合格！ もう少しでした';
+          }
+
+          const sign = diff > 0 ? `+${diff}` : `${diff}`;
+          feedbackDetail.innerHTML = `正解: <strong>${target}°</strong> ｜ あなたの角度: <strong>${guessed}°</strong> (誤差: <strong>${sign}°</strong> / 基準: ±${settings.tolerance}°)`;
+
+          if (settings.gameMode === 'choice3' || settings.gameMode === 'nstep') {
+            renderChoiceButtons();
+          }
+
+          renderMainCanvas();
+        }
+
+        // 作成モードでは確定後に結果の数値を確認できるようコントロールを表示
+        if (settings.gameMode === 'drag') {
+          dragModeInfo.style.display = 'none';
+          guessControls.style.display = 'flex';
+          angleDisplay.textContent = problem.userAngle;
+          angleSlider.value = problem.userAngle;
+          btnMinus.disabled = true;
+          btnPlus.disabled = true;
+          angleSlider.disabled = true;
+          document.querySelectorAll('.btn-jump').forEach(b => b.disabled = true);
+        }
+
+        btnAction.classList.add('btn-next');
+        btnActionText.textContent = '次の問題へ';
+        btnAction.style.display = 'flex';
+      }
+
+      function handleChoiceSelection(index) {
+        if (problem.isAnswered) return;
+        const chosen = problem.choices[index];
+        problem.selectedChoice = chosen;
+        problem.userAngle = chosen;
+        angleDisplay.textContent = chosen;
+        submitAnswer();
+      }
+
+      function handleFigChoiceSelection(index) {
+        if (problem.isAnswered) return;
+        const chosen = problem.figOptions[index].angle;
+        problem.selectedChoice = chosen;
+        problem.userAngle = chosen;
+        submitAnswer();
+      }
+
+      // Canvas DPI最適化 (Retina対応)
+      function setupCanvasDPI(canvas, width, height) {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        return ctx;
+      }
+
+      // 単一メインキャンバスの描画
+      function renderMainCanvas() {
+        const w = 360;
+        const h = 300;
+        const ctx = setupCanvasDPI(mainCanvas, w, h);
+        const cx = w / 2;
+        const cy = h / 2;
+
+        ctx.clearRect(0, 0, w, h);
+        drawSubtleGrid(ctx, cx, cy);
+
+        const baseRot = problem.baseRotation;
+        const targetRad = (problem.targetAngle * Math.PI) / 180;
+        const l1 = problem.arm1Len;
+        const l2 = problem.arm2Len;
+
+        const isDragActive = settings.gameMode === 'drag' && !problem.isAnswered;
+        const displayRad = isDragActive ? (problem.userAngle * Math.PI) / 180 : targetRad;
+
+        // 始線
+        const x1 = cx + l1 * Math.cos(baseRot);
+        const y1 = cy + l1 * Math.sin(baseRot);
+
+        // 終線
+        const arm2Angle = baseRot + displayRad;
+        const x2 = cx + l2 * Math.cos(arm2Angle);
+        const y2 = cy + l2 * Math.sin(arm2Angle);
+
+        const arcRadius = 42;
+
+        // 【要件対応】扇形・円弧の表示/非表示トグル (settings.showArc)
+        if (settings.showArc) {
+          // 扇形の半透明塗り
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.arc(cx, cy, arcRadius, baseRot, arm2Angle, false);
+          ctx.closePath();
+          ctx.fillStyle = isDragActive ? 'rgba(37, 99, 235, 0.12)' : 'rgba(37, 99, 235, 0.08)';
+          ctx.fill();
+
+          // 円弧線
+          ctx.beginPath();
+          ctx.arc(cx, cy, arcRadius, baseRot, arm2Angle, false);
+          ctx.strokeStyle = isDragActive ? '#2563eb' : '#64748b';
+          ctx.lineWidth = Math.max(1.5, settings.lineWidth * 0.7);
+          ctx.stroke();
+        }
+
+        // 2本の直線交差（※頂点ポッチなし、線のみの交差）
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(cx, cy);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = settings.lineWidth;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+
+        // ドラッグ作成中の操作ハンドル
+        if (isDragActive) {
+          ctx.beginPath();
+          ctx.arc(x2, y2, 10, 0, 2 * Math.PI);
+          ctx.fillStyle = '#2563eb';
+          ctx.fill();
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = '#ffffff';
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(x2, y2, 16, 0, 2 * Math.PI);
+          ctx.strokeStyle = 'rgba(37, 99, 235, 0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+
+        // 確定後：推測角度を赤色点線でオーバーレイ表示
+        if (problem.isAnswered) {
+          const userRad = (problem.userAngle * Math.PI) / 180;
+          const userArmAngle = baseRot + userRad;
+          const userLen = 130;
+          const ux = cx + userLen * Math.cos(userArmAngle);
+          const uy = cy + userLen * Math.sin(userArmAngle);
+
+          ctx.save();
+          // 赤い破線
+          ctx.beginPath();
+          ctx.setLineDash([6, 5]);
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(ux, uy);
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = Math.max(2, settings.lineWidth);
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          // 赤い破線円弧（扇形ON時、または回答後のズレ把握用）
+          ctx.beginPath();
+          ctx.setLineDash([4, 4]);
+          ctx.arc(cx, cy, arcRadius + 10, baseRot, userArmAngle, false);
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // ラベルバッジ
+          const tagX = cx + (userLen + 18) * Math.cos(userArmAngle);
+          const tagY = cy + (userLen + 18) * Math.sin(userArmAngle);
+          const userLabel = settings.gameMode === 'drag' ? `${problem.userAngle}° (あなたの作成)` : `${problem.userAngle}° (推測)`;
+          drawBadge(ctx, tagX, tagY, userLabel, '#ef4444', '#fee2e2');
+
+          const trueTagX = cx + (l2 + 18) * Math.cos(baseRot + targetRad);
+          const trueTagY = cy + (l2 + 18) * Math.sin(baseRot + targetRad);
+          drawBadge(ctx, trueTagX, trueTagY, `${problem.targetAngle}° (正解)`, '#16a34a', '#dcfce7');
+
+          ctx.restore();
+        }
+      }
+
+      // 【要件対応】図形3択（角度→図形選択）の描画
+      function renderFigChoices() {
+        if (!problem.figOptions || problem.figOptions.length < 3) return;
+
+        for (let i = 0; i < 3; i++) {
+          const opt = problem.figOptions[i];
+          const card = document.getElementById(`figCard${i}`);
+          const canvas = document.getElementById(`figCanvas${i}`);
+          const textEl = document.getElementById(`figText${i}`);
+
+          card.className = 'figure-choice-card';
+          if (problem.isAnswered) {
+            card.classList.add('disabled');
+            if (opt.angle === problem.targetAngle) {
+              card.classList.add('correct');
+              textEl.textContent = `${opt.angle}° (正解)`;
+            } else if (opt.angle === problem.selectedChoice) {
+              card.classList.add('wrong');
+              textEl.textContent = `${opt.angle}°`;
+            } else {
+              textEl.textContent = `${opt.angle}°`;
+            }
+          } else {
+            textEl.textContent = '選択';
+          }
+
+          // ミニキャンバス描画
+          const w = 110;
+          const h = 110;
+          const ctx = setupCanvasDPI(canvas, w, h);
+          const cx = w / 2;
+          const cy = h / 2;
+
+          ctx.clearRect(0, 0, w, h);
+
+          // 背景円
+          ctx.save();
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.15)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          const bRot = opt.baseRotation;
+          const rad = (opt.angle * Math.PI) / 180;
+          const l1 = opt.arm1Len;
+          const l2 = opt.arm2Len;
+
+          const x1 = cx + l1 * Math.cos(bRot);
+          const y1 = cy + l1 * Math.sin(bRot);
+          const x2 = cx + l2 * Math.cos(bRot + rad);
+          const y2 = cy + l2 * Math.sin(bRot + rad);
+
+          // 扇形・円弧（設定に連動）
+          if (settings.showArc) {
+            const arcR = 18;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, arcR, bRot, bRot + rad, false);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(37, 99, 235, 0.09)';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, arcR, bRot, bRot + rad, false);
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+          }
+
+          // 2本の直線
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(cx, cy);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = '#1e293b';
+          ctx.lineWidth = Math.min(3, Math.max(1.5, settings.lineWidth));
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.stroke();
+        }
+      }
+
+      function drawSubtleGrid(ctx, cx, cy) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 5]);
+
+        [60, 110].forEach(r => {
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+
+        ctx.setLineDash([]);
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+        ctx.beginPath();
+        ctx.moveTo(cx - 8, cy); ctx.lineTo(cx + 8, cy);
+        ctx.moveTo(cx, cy - 8); ctx.lineTo(cx + 8, cy);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawBadge(ctx, x, y, text, textColor, bgColor) {
+        ctx.save();
+        ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        const tm = ctx.measureText(text);
+        const w = tm.width + 14;
+        const h = 18;
+
+        let bx = x - w / 2;
+        let by = y - h / 2;
+        if (bx < 4) bx = 4;
+        if (bx + w > 356) bx = 356 - w;
+        if (by < 4) by = 4;
+        if (by + h > 296) by = 296 - h;
+
+        ctx.fillStyle = bgColor;
+        ctx.strokeStyle = textColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(bx, by, w, h, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = textColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, bx + w / 2, by + h / 2 + 1);
+        ctx.restore();
+      }
+
+      // 入試風ヒント見本キャンバス (∠PQR = 〇〇°)
+      function rerollHint() {
+        const bounds = getRangeBounds(settings.hintRange);
+        hintState.angle = getRandomInt(bounds.min, bounds.max);
+        renderHintCanvas();
+      }
+
+      function renderHintCanvas() {
+        if (!settings.showHint) return;
+
+        const w = 320;
+        const h = 130;
+        const ctx = setupCanvasDPI(hintCanvas, w, h);
+        ctx.clearRect(0, 0, w, h);
+
+        const angle = hintState.angle;
+        hintAngleLabel.textContent = `∠PQR = ${angle}°`;
+
+        const qx = 55;
+        const qy = 95;
+        const armLen = 95;
+
+        // 水平の底辺 QR
+        const rx = qx + armLen;
+        const ry = qy;
+
+        // 傾いた辺 QP
+        const rad = (angle * Math.PI) / 180;
+        const px = qx + armLen * Math.cos(-rad);
+        const py = qy + armLen * Math.sin(-rad);
+
+        // 扇形・円弧（設定に連動）
+        if (settings.showArc) {
+          const arcR = 30;
+          ctx.beginPath();
+          ctx.arc(qx, qy, arcR, 0, -rad, true);
+          ctx.strokeStyle = '#2563eb';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        // 2直線
+        ctx.beginPath();
+        ctx.moveTo(rx, ry);
+        ctx.lineTo(qx, qy);
+        ctx.lineTo(px, py);
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+
+        // 点ラベル P, Q, R
+        ctx.font = 'bold 12px "Times New Roman", Georgia, serif';
+        ctx.fillStyle = '#1e293b';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        ctx.fillText('Q', qx - 14, qy + 12);
+        ctx.fillText('R', rx + 14, ry);
+        const pLabelX = px + 12 * Math.cos(-rad);
+        const pLabelY = py + 12 * Math.sin(-rad);
+        ctx.fillText('P', pLabelX, pLabelY);
+
+        // 二等分線方向オフセット＋白背景バッジで絶対に文字が重ならない設計
+        const bisectorRad = -rad / 2;
+        const badgeDist = 30 + 32;
+        const badgeX = qx + badgeDist * Math.cos(bisectorRad);
+        const badgeY = qy + badgeDist * Math.sin(bisectorRad);
+
+        const badgeText = `${angle}°`;
+        ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        const tm = ctx.measureText(badgeText);
+        const bw = tm.width + 12;
+        const bh = 20;
+
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetY = 1;
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.roundRect(badgeX - bw / 2, badgeY - bh / 2, bw, bh, 5);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.fillStyle = '#1e293b';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(badgeText, badgeX, badgeY + 1);
+      }
+
+      // ドラッグ操作による角度作成 (※数値は出さず純粋な目分量でアームを動かす)
+      function handleCanvasPointer(e) {
+        if (settings.gameMode !== 'drag' || problem.isAnswered) return;
+
+        const rect = mainCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        const px = clientX - rect.left;
+        const py = clientY - rect.top;
+
+        const cx = 360 / 2;
+        const cy = 300 / 2;
+
+        const dx = px - cx;
+        const dy = py - cy;
+        const pointerAngle = Math.atan2(dy, dx);
+
+        let diffAngle = pointerAngle - problem.baseRotation;
+        while (diffAngle < 0) diffAngle += 2 * Math.PI;
+        while (diffAngle >= 2 * Math.PI) diffAngle -= 2 * Math.PI;
+
+        let deg = Math.round((diffAngle * 180) / Math.PI);
+        const bounds = getRangeBounds(settings.angleRange);
+        if (deg < bounds.min) deg = bounds.min;
+        if (deg > bounds.max) deg = bounds.max;
+
+        if (deg !== problem.userAngle) {
+          problem.userAngle = deg;
+          // ※作成中は数値を画面に表示しない（答えがバレるのを防止）
+          renderMainCanvas();
+        }
+      }
+
+      mainCanvas.addEventListener('mousedown', (e) => {
+        if (settings.gameMode !== 'drag' || problem.isAnswered) return;
+        problem.isDraggingArm = true;
+        handleCanvasPointer(e);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (problem.isDraggingArm) handleCanvasPointer(e);
+      });
+
+      window.addEventListener('mouseup', () => {
+        problem.isDraggingArm = false;
+      });
+
+      mainCanvas.addEventListener('touchstart', (e) => {
+        if (settings.gameMode !== 'drag' || problem.isAnswered) return;
+        problem.isDraggingArm = true;
+        handleCanvasPointer(e);
+        e.preventDefault();
+      }, { passive: false });
+
+      mainCanvas.addEventListener('touchmove', (e) => {
+        if (problem.isDraggingArm) {
+          handleCanvasPointer(e);
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      mainCanvas.addEventListener('touchend', () => {
+        problem.isDraggingArm = false;
+      });
+
+      // スライダー＆ボタン操作（推測モード用）
+      function setAngle(newVal) {
+        if (problem.isAnswered) return;
+        const bounds = getRangeBounds(settings.angleRange);
+        newVal = Math.max(bounds.min, Math.min(bounds.max, newVal));
+        problem.userAngle = newVal;
+        angleSlider.value = newVal;
+        angleDisplay.textContent = newVal;
+        playSound('click');
+      }
+
+      angleSlider.addEventListener('input', (e) => setAngle(parseInt(e.target.value, 10)));
+      btnMinus.addEventListener('click', () => setAngle(problem.userAngle - 1));
+      btnPlus.addEventListener('click', () => setAngle(problem.userAngle + 1));
+
+      document.querySelectorAll('.btn-jump').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.dataset.delta) {
+            setAngle(problem.userAngle + parseInt(btn.dataset.delta, 10));
+          } else if (btn.dataset.set) {
+            setAngle(parseInt(btn.dataset.set, 10));
+          }
+        });
+      });
+
+      // 数字3択ボタンイベント
+      for (let i = 0; i < 3; i++) {
+        document.getElementById(`choiceBtn${i}`).addEventListener('click', () => handleChoiceSelection(i));
+      }
+
+      // 図形3択カードイベント
+      for (let i = 0; i < 3; i++) {
+        document.getElementById(`figCard${i}`).addEventListener('click', () => handleFigChoiceSelection(i));
+      }
+
+      btnAction.addEventListener('click', submitAnswer);
+
+      // モード切り替えタブ
+      document.querySelectorAll('.mode-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const mode = tab.dataset.gamemode;
+          document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          settings.gameMode = mode;
+          saveSettings();
+          generateNewProblem();
+        });
+      });
+
+      // キーボード操作対応
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && settingsModal.classList.contains('open')) {
+          closeModal();
+          return;
+        }
+
+        if (settingsModal.classList.contains('open')) return;
+
+        if (e.key === 'Enter') {
+          submitAnswer();
+          e.preventDefault();
+        } else if (e.key === 'ArrowLeft' && settings.gameMode === 'guess') {
+          setAngle(problem.userAngle - (e.shiftKey ? 5 : 1));
+          e.preventDefault();
+        } else if (e.key === 'ArrowRight' && settings.gameMode === 'guess') {
+          setAngle(problem.userAngle + (e.shiftKey ? 5 : 1));
+          e.preventDefault();
+        } else if (['1', '2', '3'].includes(e.key)) {
+          const idx = parseInt(e.key, 10) - 1;
+          if (settings.gameMode === 'figchoice') {
+            handleFigChoiceSelection(idx);
+          } else if (settings.gameMode === 'choice3' || settings.gameMode === 'nstep') {
+            handleChoiceSelection(idx);
+          }
+        } else if (e.key === ' ' && problem.isAnswered) {
+          generateNewProblem();
+          e.preventDefault();
+        }
+      });
+
+      // 設定モーダル
+      function openModal() { settingsModal.classList.add('open'); }
+      function closeModal() { settingsModal.classList.remove('open'); }
+
+      btnOpenSettings.addEventListener('click', openModal);
+      btnCloseModal.addEventListener('click', closeModal);
+      btnFooterClose.addEventListener('click', closeModal);
+      settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeModal(); });
+
+      // 扇形・円弧表示チェックボックス
+      checkShowArc.addEventListener('change', (e) => {
+        settings.showArc = e.target.checked;
+        noArcBadge.style.display = settings.showArc ? 'none' : 'block';
+        saveSettings();
+        if (settings.gameMode === 'figchoice') {
+          renderFigChoices();
+        } else {
+          renderMainCanvas();
+        }
+        if (settings.showHint) renderHintCanvas();
+      });
+
+      rangeSegmented.querySelectorAll('.segment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          rangeSegmented.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          settings.angleRange = btn.dataset.range;
+          saveSettings();
+          updateRangeBoundsUI();
+          generateNewProblem();
+        });
+      });
+
+      toleranceSlider.addEventListener('input', (e) => {
+        settings.tolerance = parseInt(e.target.value, 10);
+        toleranceBadge.textContent = `±${settings.tolerance}° 以内`;
+        statTolerance.textContent = `±${settings.tolerance}°`;
+        saveSettings();
+      });
+
+      checkAsymArms.addEventListener('change', (e) => {
+        settings.asymmetricArms = e.target.checked;
+        saveSettings();
+        asymBadge.style.display = settings.asymmetricArms ? 'block' : 'none';
+        generateNewProblem();
+      });
+
+      nStepSlider.addEventListener('input', (e) => {
+        settings.nStep = parseInt(e.target.value, 10);
+        nStepBadge.textContent = `${settings.nStep}° 刻み`;
+        tabNStep.textContent = `🔢 ${settings.nStep}°3択`;
+        saveSettings();
+        if (settings.gameMode === 'nstep') generateNewProblem();
+      });
+
+      lineWidthSlider.addEventListener('input', (e) => {
+        settings.lineWidth = parseInt(e.target.value, 10);
+        lineWidthBadge.textContent = `${settings.lineWidth} px`;
+        saveSettings();
+        if (settings.gameMode === 'figchoice') {
+          renderFigChoices();
+        } else {
+          renderMainCanvas();
+        }
+      });
+
+      checkHint.addEventListener('change', (e) => {
+        settings.showHint = e.target.checked;
+        hintContainer.style.display = settings.showHint ? 'flex' : 'none';
+        hintRangeGroup.style.display = settings.showHint ? 'flex' : 'none';
+        saveSettings();
+        if (settings.showHint) rerollHint();
+      });
+
+      hintRangeSegmented.querySelectorAll('.segment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          hintRangeSegmented.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          settings.hintRange = btn.dataset.hintrange;
+          saveSettings();
+          rerollHint();
+        });
+      });
+
+      btnRerollHint.addEventListener('click', () => {
+        playSound('click');
+        rerollHint();
+      });
+
+      checkSound.addEventListener('change', (e) => {
+        settings.soundEnabled = e.target.checked;
+        saveSettings();
+      });
+
+      btnResetStats.addEventListener('click', () => {
+        if (confirm('これまでの戦績データ（連続正解、最高記録、正答率）を初期化しますか？')) {
+          stats.streak = 0;
+          stats.bestStreak = 0;
+          stats.totalPlayed = 0;
+          stats.correctCount = 0;
+          saveStats();
+          updateStatsUI();
+          playSound('click');
+        }
+      });
+
+      // アプリ初期化
+      function init() {
+        rangeSegmented.querySelectorAll('.segment-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.range === settings.angleRange);
+        });
+        checkShowArc.checked = settings.showArc;
+        noArcBadge.style.display = settings.showArc ? 'none' : 'block';
+        toleranceSlider.value = settings.tolerance;
+        toleranceBadge.textContent = `±${settings.tolerance}° 以内`;
+        checkAsymArms.checked = settings.asymmetricArms;
+        nStepSlider.value = settings.nStep;
+        nStepBadge.textContent = `${settings.nStep}° 刻み`;
+        lineWidthSlider.value = settings.lineWidth;
+        lineWidthBadge.textContent = `${settings.lineWidth} px`;
+        checkHint.checked = settings.showHint;
+        hintContainer.style.display = settings.showHint ? 'flex' : 'none';
+        hintRangeGroup.style.display = settings.showHint ? 'flex' : 'none';
+        checkSound.checked = settings.soundEnabled;
+
+        document.querySelectorAll('.mode-tab').forEach(t => {
+          t.classList.toggle('active', t.dataset.gamemode === settings.gameMode);
+        });
+
+        updateRangeBoundsUI();
+        updateStatsUI();
+        generateNewProblem();
+
+        if (settings.showHint) rerollHint();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
